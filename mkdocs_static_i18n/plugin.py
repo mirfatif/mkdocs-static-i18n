@@ -145,6 +145,14 @@ class I18n(ExtendedPlugin):
         context["i18n_alternates"] = self.i18n_files_per_language
         return context
 
+    def on_post_template(self, output_content, template_name, config):
+        if template_name == '404.html':
+            if self.is_default_language_build:
+                self._default_output_404 = output_content
+            if hasattr(self, "_default_output_404"):
+                return self._default_output_404
+        return output_content
+
     @plugins.event_priority(50)
     def on_page_markdown(self, markdown, page, config, files):
         """
